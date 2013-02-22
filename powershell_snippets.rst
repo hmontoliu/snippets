@@ -42,7 +42,7 @@ Install hotfixes (examples)::
     gci *.exe | ForEach-Object {Start-Process -Wait $_.FullName $arguments}
 
 EventLog examples
---------------------------elec
+--------------------------
 
 example::
     
