@@ -1,4 +1,4 @@
 snippets
 ========
 
-code/shell snippets for daily usage
+Heterogeneous code/shell snippets for daily usage.

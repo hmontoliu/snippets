@@ -42,11 +42,15 @@ Install hotfixes (examples)::
     gci *.exe | ForEach-Object {Start-Process -Wait $_.FullName $arguments}
 
 EventLog examples
----------------------------
+--------------------------elec
 
 example::
     
     get-eventlog -logname system -entrytype error,warning -newest 30
+
+    Get-EventLog -LogName system -EntryType error,warning -After '01-febrero-2013' | more
+    
+    get-eventlog -logname application -entrytype error,warning -newest 30 | Group-Object -Property Source, Message | fl -GroupBy Name -Property Count, Name
 
 System processes 
 ----------------
@@ -61,7 +65,11 @@ Audit robocopy logs
 
 ::
 
+    gci path/*log | select-string 'Inicio' 
     gci path/*log | select-string 'error' -Context 4
+    gci path/*log | select-string 'Copiado' -Context 4
+
+    gci path/*log | select-string -Pattern 'Started|error|Copied' -Context 4
 
 Audit cobian backup logs
 ----------------------------------------------------------
@@ -75,6 +83,11 @@ Last 5 days error list::
     gci 'C:\program files*\Cobian*\Logs\*' | sort LastWriteTime | select -last 5 | select-string 'error' -Context 4
     gci 'C:\Archivos de *\Cobian*\Settings\Logs\*' | sort LastWriteTime | select -last 5 | select-string 'error' -Context 4
 
+Scheduled tasks
+---------------------------
 
+Perfeccionar::
+
+    $schedtasks = schtasks.exe /query /V /FO CSV | ConvertFrom-Csv
 
 
