@@ -52,6 +52,12 @@ example::
     
     get-eventlog -logname application -entrytype error,warning -newest 30 | Group-Object -Property Source, Message | fl -GroupBy Name -Property Count, Name
 
+remove event-logs (some additional flags: -confirm and -whatif)::
+
+    clear-eventlog -log application, system
+
+
+
 System processes 
 ----------------
 
@@ -90,4 +96,17 @@ Perfeccionar::
 
     $schedtasks = schtasks.exe /query /V /FO CSV | ConvertFrom-Csv
 
+'tail' equivalent in powershell
+----------------------------------------
 
+tail -10::
+
+    Get-Content [filename] | Select-Object -Last 10
+
+tail -f equivalent (not too much) in PS 2::
+
+    Get-Content -Path "path\file" -Wait
+
+tail -f equivalent in PS 3::
+
+    Get-Conent -Tail -Wait -Path  "path\file" 
