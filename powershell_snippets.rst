@@ -76,6 +76,7 @@ Audit robocopy logs
     gci path/*log | select-string 'Copiado' -Context 4
 
     gci path/*log | select-string -Pattern 'Started|error|Copied' -Context 4
+    gci path/*log | select-string -Pattern 'Inicio|error|Copiado' -Context 4
 
 Audit cobian backup logs
 ----------------------------------------------------------
@@ -88,6 +89,18 @@ Last 5 days error list::
 
     gci 'C:\program files*\Cobian*\Logs\*' | sort LastWriteTime | select -last 5 | select-string 'error' -Context 4
     gci 'C:\Archivos de *\Cobian*\Settings\Logs\*' | sort LastWriteTime | select -last 5 | select-string 'error' -Context 4
+
+List powershell drives
+-------------------------------
+
+List powershell drives::
+
+    Get-PSDrive
+    Get-PSDrive | Format-List
+
+List Filesystem Drives::
+
+    Get-PSDrive -PSProvider FileSystem
 
 Scheduled tasks
 ---------------------------
@@ -109,4 +122,11 @@ tail -f equivalent (not too much) in PS 2::
 
 tail -f equivalent in PS 3::
 
-    Get-Conent -Tail -Wait -Path  "path\file" 
+    Get-Content -Tail -Wait -Path  "path\file" 
+
+'sort -u' equivalent in powershell
+-----------------------------------------
+
+::
+
+   Get-Content somelist.txt | Sort-Object | Get-Unique
