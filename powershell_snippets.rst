@@ -21,8 +21,8 @@ Manage/download hotfixes from MBSA reports
 
 Convert each missing hotfix to object::
 
-    $mbsa_report = path al informe
-    $update_dir = c:\administrador\actualizaciones 
+    $mbsa_report = gci $HOME/securityscans/*.mbsa | sort LastWriteTime | select -last 1 
+    $update_dir = "c:\administrador\actualizaciones" 
 
     [xml]$mbsa = Get-Content $mbsa_report 
 
