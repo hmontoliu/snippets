@@ -23,16 +23,13 @@ Convert each missing hotfix to object::
 
     $mbsa_report = gci $HOME/securityscans/*.mbsa | sort LastWriteTime | select -last 1 
     $update_dir = "c:\administrador\actualizaciones" 
+    mkdir $update_dir
 
     [xml]$mbsa = Get-Content $mbsa_report 
 
     $hotfixes = $mbsa.GetElementsByTagName('Check') | Foreach-Object {$_.GetElementsByTagName('UpdateData')} | where-object {$_.IsInstalled -eq "false"}  
 
-Get a list with all the missing hotfixes/patches/service packs:: 
-    
     $hotfixes | foreach-object {$_.Title} > $update_dir\list.txt
-
-Download those hotfixes to update_dir::
 
     $hotfixes | foreach-object {(New-Object System.Net.WebClient).DownloadFile($_.References.DownloadURL, $update_dir + "\" + [System.IO.Path]::GetFileName($_.References.DownloadURL))}
 
