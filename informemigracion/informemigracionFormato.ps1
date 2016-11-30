@@ -303,7 +303,9 @@ $varios2 = @"
 <li>&nbsp;</li>       
 </ul>
 </div>
-<div id='aplicacionesdelcliente' style="display: table-cell;">
+
+<div style="display: table-cell;">
+<div id='aplicacionesdelcliente'>
 <h3>Listado de aplicaciones propias del cliente</h3>
 <ul>
 <li>&nbsp;</li>        
@@ -311,6 +313,16 @@ $varios2 = @"
 <li>&nbsp;</li>
 <li>&nbsp;</li>  
 </ul>
+</div>
+<div id='Backups'>
+<h3>Backups</h3>
+<ul>
+<li>&nbsp;</li>        
+<li>&nbsp;</li>        
+<li>&nbsp;</li>
+<li>&nbsp;</li>  
+</ul>
+</div>
 </div>
 </div>
 </div>
