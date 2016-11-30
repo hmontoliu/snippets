@@ -151,8 +151,9 @@ $nic = Get-WmiObject win32_networkadapterConfiguration  -Filter "Ipenabled=True"
      -postcontent "</div>" |
      Out-String
 
-$localusers = Get-WmiObject win32_UserAccount |
-     ConvertTo-Html -Fragment name, caption, fullname, disabled, sid `
+$localusers = Get-WmiObject win32_UserAccount | 
+     Select-Object name, @{N="password";E={$null}}, caption, fullname, disabled, sid |
+     ConvertTo-Html -Fragment `
      -precontent "<div id='localusers'><h3>Cuentas locales</h3>"`
      -postcontent "</div>" | 
      Out-String
