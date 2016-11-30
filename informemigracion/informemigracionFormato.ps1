@@ -13,8 +13,9 @@
 #>
 
 $computername = $ENV:COMPUTERNAME
+$username = "${ENV:USERNAME}@${ENV:USERDOMAIN}"
 $outdir = "C:\temp\" 
-$OUTFILE = "${outdir}\${computername}.html" 
+$OUTFILE = "${outdir}\${computername}-${usernameara }.html" 
 New-Item -ItemType Directory -Force -Path "$outdir"
 
 $head = @"
