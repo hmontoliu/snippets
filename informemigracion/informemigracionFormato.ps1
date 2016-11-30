@@ -137,6 +137,7 @@ $nic = Get-WmiObject win32_networkadapterConfiguration  -Filter "Ipenabled=True"
     $_ | select-object `
       @{Name="MACAddress";       Expression={$_.MACAddress}},
       @{Name="IPAddress";        Expression={$_.IPAddress -join ', '}}, # necesario para mostar arrays en html
+      @{Name="IPSubnet";         Expression={$_.IPSubnet}}, 
       @{Name="DefaultIPGateway"; Expression={$_.DefaultIPGateway -join ', '}},
       @{Name="DHCPEnabled";      Expression={$_.DHCPEnabled}},
       @{Name="DHCPServer";       Expression={$_.DHCPServer}},
@@ -145,7 +146,7 @@ $nic = Get-WmiObject win32_networkadapterConfiguration  -Filter "Ipenabled=True"
       @{Name="Description";      Expression={$_.Description}}
 } |
      ConvertTo-Html `
-     -Fragment name, MACAddress, IPAddress, DefaultIPGateway, DHCPEnabled, DHCPServer, DNSDomain, DNSServerSearchOrder, Description `
+     -Fragment name, MACAddress, IPAddress, IPSubnet, DefaultIPGateway, DHCPEnabled, DHCPServer, DNSDomain, DNSServerSearchOrder, Description `
      -precontent "<div id='nic'><h3>Interfaces de red operativas (configuraci&oacute;n)</h3>" `
      -postcontent "</div>" |
      Out-String
