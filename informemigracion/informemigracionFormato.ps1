@@ -15,7 +15,7 @@
 $computername = $ENV:COMPUTERNAME
 $username = "${ENV:USERNAME}@${ENV:USERDOMAIN}"
 $outdir = "C:\temp\" 
-$OUTFILE = "${outdir}\${computername}-${usernameara }.html" 
+$OUTFILE = "${outdir}\${computername}-${username}.html" 
 New-Item -ItemType Directory -Force -Path "$outdir"
 
 $head = @"
@@ -24,7 +24,7 @@ $head = @"
 <html xmlns="http://www.w3.org/1999/xhtml" xml:lang="es" lang="es">
 <head>
 <meta http-equiv="Content-Type" content="text/html" charset="utf-8" />
-<title>Informe equipo $computername</title>
+<title>Informe equipo $computername (gen: $username)</title>
 <meta name="author" content="Hilario J. Montoliu (hmontoliu at gmail.com)" />
 <style type="text/css">
 html, body { margin: 0; padding: 0; height: 100%; font-family: arial; }
@@ -90,7 +90,7 @@ function date_lastmodified()
 <div id="container">
 <div id="cabecera">
 <h2>
-Informe equipo $computername
+Informe equipo $computername (gen: $username)
 </h2>
 $(Get-Date)
 <span>
