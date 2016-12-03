@@ -180,7 +180,16 @@ $share = Get-WMIObject Win32_share |
   
 
 # tareas programadas
-# TODO: en w10 o 2016 usar get-scheduledtask
+try {
+# en w10 o 2016 usar get-scheduledtask
+$tareashtml = Get-ScheduledTask -TaskPath \ |Get-ScheduledTaskInfo |
+     Select-Object TaskName, LastRunTime, NextRunTime, lasttaskresult |
+     ConvertTo-Html -Fragment  `
+     -precontent "<div id='tareasprogramadas'><h3>Listado tareas programadas</h3>"`
+     -postcontent "</div>" | 
+     Out-String
+}
+catch {
 # para versiones anteriores saco los datos de schtasks.exe
 # (no he podido hacer que funcione una regex multiline
 # así que esto es provisional)
@@ -200,6 +209,7 @@ $lineas
 </pre>
 </div>
 "@
+}
   
 $certificados =  Get-ChildItem cert:\currentuser\my |
      ConvertTo-Html -Fragment  issuer, subject, hasprivatekey, notbefore, notafter `
