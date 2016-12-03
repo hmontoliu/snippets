@@ -180,12 +180,13 @@ $share = Get-WMIObject Win32_share |
   
 
 # tareas programadas
+$tareastitle = "Listado de tareas programadas (taskpath '\')"
 try {
 # en w10 o 2016 usar get-scheduledtask
 $tareashtml = Get-ScheduledTask -TaskPath \ |Get-ScheduledTaskInfo |
      Select-Object TaskName, LastRunTime, NextRunTime, lasttaskresult |
      ConvertTo-Html -Fragment  `
-     -precontent "<div id='tareasprogramadas'><h3>Listado tareas programadas</h3>"`
+     -precontent "<div id='tareasprogramadas'><h3>$tareastitle</h3>"`
      -postcontent "</div>" | 
      Out-String
 }
@@ -203,7 +204,7 @@ foreach ($tarea in $(schtasks.exe)) {
 } 
 
 $tareashtml = @"
-<div id='tareasprogramadas'><h3>Listado tareas programadas "/"</h3>
+<div id='tareasprogramadas'><h3>$tareastitle</h3>
 <pre>
 $lineas
 </pre>
