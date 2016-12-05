@@ -97,7 +97,7 @@ $(Get-Date)
 </span>
 </div>
 <div id="contenido">
-Algunas funciones solo estan disponibles con <a href="https://www.microsoft.com/en-us/download/details.aspx?id=50395">powershell 4.0 o superior</a>.
+Algunas funciones solo est&acute;n disponibles con <a href="https://www.microsoft.com/en-us/download/details.aspx?id=50395">powershell 4.0 o superior</a>. Versi&oacute;n actual: $($PSVersionTable.PSVersion.Major).$($PSVersionTable.PSVersion.Minor).
 "@
 
 $footer = '
