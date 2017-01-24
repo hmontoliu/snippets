@@ -1,13 +1,12 @@
 # mantenimiento.ps1
-# just a draft
+# draft
 # -- H. Montoliu <hmontoliu@gmail.com>  Wed Jan 18 10:27:01 UTC 2017
-
 
 
 # ERROR/SYS LOG
 
-get-eventlog -logname system -entrytype error,warning -newest 50 | out-gridview
-get-eventlog -logname application -entrytype error,warning -newest 50 | out-gridview
+get-eventlog -logname system -entrytype error,warning -newest 50 | Select-Object Index,TimeGenerated,EntryType,Source,EventID,InstanceId,Message | Out-GridView
+get-eventlog -logname application -entrytype error,warning -newest 50 | Select-Object Index,TimeGenerated,EntryType,Source,EventID,InstanceId,Message | Out-GridView
 
 # COBIAN BACKUP SUMMARY
 # cobian10
@@ -40,7 +39,8 @@ $INSTALLER="ccsetup${VERSIONCC}.exe"
 
 # run
 $ccleaner = get-childitem "C:\prog*\ccleaner" -include ccleaner.exe -recurse
-&$ccleaner "/auto"
+# do not run ccleaner until eventlog is fully checked
+# &$ccleaner "/auto"
 
 # DEFRAGGLER
 $VERSIONDF="221"
@@ -58,5 +58,6 @@ $INSTALLER="dfsetup${VERSIONDF}.exe"
 $mbam = get-childitem "C:\prog*\malwarebytes*" -include mbam.exe -recurse
 &$mbam
 
-$management = "compmgmt.msc"
-&$management
+# open compmgmt.msc at end
+$compmgmt="compmgmt.msc"
+&$compmgmt
