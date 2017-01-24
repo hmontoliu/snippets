@@ -3,6 +3,7 @@
 # -- H. Montoliu <hmontoliu@gmail.com>  Wed Jan 18 10:27:01 UTC 2017
 
 
+
 # ERROR/SYS LOG
 
 get-eventlog -logname system -entrytype error,warning -newest 50 | out-gridview
@@ -56,3 +57,6 @@ $INSTALLER="dfsetup${VERSIONDF}.exe"
 # TODO Download and install
 $mbam = get-childitem "C:\prog*\malwarebytes*" -include mbam.exe -recurse
 &$mbam
+
+$management = "compmgmt.msc"
+&management
