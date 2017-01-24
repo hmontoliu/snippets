@@ -13,14 +13,18 @@ get-eventlog -logname application -entrytype error,warning -newest 50 | Select-O
 gci 'C:\program files*\Cobian*\Settings\Logs\*' | sort LastWriteTime | select -last 7 | select-string 'error' -Context 4 | out-gridview
 # cobian11
 gci 'C:\program files*\Cobian*\Logs\*' | sort LastWriteTime | select -last 7 | select-string 'error' -Context 4 | out-gridview
-
+# legacy windows TODO
+gci 'C:\Arch*\Cobian*\Settings\Logs\*' | sort LastWriteTime | select -last 7 | select-string 'error' -Context 4 | out-gridview
 
 # PROGRAM DOWNLOAD AND INSTALL
 $DESTDIR="c:\_administrador\programas"
 mkdir -force $DESTDIR
 
-# CCLEANER
+# ROBOCOPY BACKUP SUMMARY
+# TODO
+# gci c:\backups\logs\* | select-string -Pattern 'Started|error|Copied|Inicio|error|Copiado' -Context 4
 
+# CCLEANER
 # Download, install, and run free ccleaner
 # You should run ccleaner if you have configured it previously 
 #
@@ -37,7 +41,7 @@ $INSTALLER="ccsetup${VERSIONCC}.exe"
 # install
 &$DESTDIR\$INSTALLER "/S"
 
-# run
+# run ccleaner
 $ccleaner = get-childitem "C:\prog*\ccleaner" -include ccleaner.exe -recurse
 # do not run ccleaner until eventlog is fully checked
 # &$ccleaner "/auto"
@@ -55,7 +59,10 @@ $INSTALLER="dfsetup${VERSIONDF}.exe"
 
 # Malwarebytes
 # TODO Download and install
+# launch mbam
 $mbam = get-childitem "C:\prog*\malwarebytes*" -include mbam.exe -recurse
+# legacy windows launch mbam TODO
+$mbam = get-childitem "C:\arch*\malwarebytes*" -include mbam.exe -recurse
 &$mbam
 
 # open compmgmt.msc at end
