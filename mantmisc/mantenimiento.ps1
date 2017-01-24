@@ -59,4 +59,4 @@ $mbam = get-childitem "C:\prog*\malwarebytes*" -include mbam.exe -recurse
 &$mbam
 
 $management = "compmgmt.msc"
-&management
+&$management
