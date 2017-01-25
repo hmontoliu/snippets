@@ -29,13 +29,13 @@ getsize () {
 escalarimagenalto () {
     IMAGEN=$1
     convert -geometry x${MAXALTO} "$IMAGEN" "$TEMPORAL/$(basename $IMAGEN)"
-    mv "$TEMPORAL/$IMAGEN" "$(basename $IMAGEN)"
+    mv "$TEMPORAL/$(basename $IMAGEN)" "$IMAGEN"
     }
 
 escalarimagenancho () {
     IMAGEN=$1
     convert -geometry ${MAXANCHO}x "$IMAGEN" "$TEMPORAL/$(basename $IMAGEN)"
-    mv "$TEMPORAL/$IMAGEN" "$(basename $IMAGEN)"
+    mv "$TEMPORAL/$(basename $IMAGEN)" "$IMAGEN"
     }
 
 read ANCHO ALTO <<<$(getsize $1)
