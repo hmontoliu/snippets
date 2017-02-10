@@ -20,8 +20,7 @@ gci 'C:\program files*\Cobian*\Logs\*' | sort LastWriteTime | select -last 7 | s
 gci 'C:\Arch*\Cobian*\Settings\Logs\*' | sort LastWriteTime | select -last 7 | select-string 'error' -Context 4 | out-gridview
 
 # ROBOCOPY BACKUP SUMMARY
-# TODO
-# gci c:\backups\logs\* | select-string -Pattern 'Started|error|Copied|Inicio|error|Copiado' -Context 4
+gci 'c:\_backups\logs\*' | select-string -Pattern 'Started|error|Copied|Inicio|error|Copiado' -Context 4 | out-gridview
 
 # PROGRAM DOWNLOAD AND INSTALL
 $DESTDIR="c:\_administrador\programas"
