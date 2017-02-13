@@ -1,5 +1,6 @@
 # mantenimiento.ps1
 # draft
+# . { iwr -useb https://raw.githubusercontent.com/hmontoliu/snippets/master/mantmisc/mantenimiento.ps1 } | iex
 # -- H. Montoliu <hmontoliu@gmail.com>  Wed Jan 18 10:27:01 UTC 2017
 
 # TODO
