@@ -1,37 +1,50 @@
 # mantenimiento.ps1
-# draft
+# draft/beta
 # . { iwr -useb https://raw.githubusercontent.com/hmontoliu/snippets/master/mantmisc/mantenimiento.ps1 } | iex
 # -- H. Montoliu <hmontoliu@gmail.com>  Wed Jan 18 10:27:01 UTC 2017
 
-# TODO
-# use system env vars
-# integrate legacy systems
+# Editable variables
+$ccleaner_ver = "526"
+$defraggler_ver = "221"
+$localdir = "c:\_administrador\programas"
 
+# Common stuff
+function which($cmd) {
+     # find object in progrmafiles/programfiles(x86)/archivos de programa....
+     gci ${env:programfiles},${env:programfiles(x86)} -Include $cmd -Recurse -ErrorAction silentlycontinue | Select-Object -First 1
+     }
+
+function getlog($logname) {
+    # parse and get event logs
+    $entrytype="error","warning"
+    $entries=50
+    $eventobjects="Index","TimeGenerated","EntryType","Source","EventID","InstanceId","Message"
+    get-eventlog -logname $logname -entrytype $entrytype -Newest $entries | Select-Object $eventobjects | Out-GridView
+    }
 
 # ERROR/SYS LOG
-get-eventlog -logname system -entrytype error,warning -newest 50 | Select-Object Index,TimeGenerated,EntryType,Source,EventID,InstanceId,Message | Out-GridView
-get-eventlog -logname application -entrytype error,warning -newest 50 | Select-Object Index,TimeGenerated,EntryType,Source,EventID,InstanceId,Message | Out-GridView
+getlog system
+getlog application
 
 # COBIAN BACKUP SUMMARY
-# cobian10
-gci 'C:\program files*\Cobian*\Settings\Logs\*' | sort LastWriteTime | select -last 7 | select-string 'error' -Context 4 | out-gridview
-# cobian11
-gci 'C:\program files*\Cobian*\Logs\*' | sort LastWriteTime | select -last 7 | select-string 'error' -Context 4 | out-gridview
-# legacy windows TODO
-gci 'C:\Arch*\Cobian*\Settings\Logs\*' | sort LastWriteTime | select -last 7 | select-string 'error' -Context 4 | out-gridview
+# search order: cobian 11, cobian 10, legacy
+gci ${env:programfiles}\Cobian*\Logs\*,
+    ${env:programfiles}\Cobian*\Settings\Logs\*,
+    ${env:programfiles(x86)}\Cobian*\Settings\Logs\* -ErrorAction silentlycontinue |
+    sort LastWriteTime | select -last 7 | select-string 'error' -Context 4 | out-gridview
 
 # ROBOCOPY BACKUP SUMMARY
-# TODO
-# gci c:\backups\logs\* | select-string -Pattern 'Started|error|Copied|Inicio|error|Copiado' -Context 4
+# TODO, testing
+gci c:\_backups\logs\*  -ErrorAction silentlycontinue | select -last 7 | select-string -Pattern 'Started|error|Copied|Inicio|error|Copiado' -Context 4
 
-# PROGRAM DOWNLOAD AND INSTALL
-$DESTDIR="c:\_administrador\programas"
+# PROGRAM DOWNLOAD AND INSTALL (TODO: refactor as function; TODO: skip download if file already exists)
+$DESTDIR=$localdir
 mkdir -force $DESTDIR
 
 # CCLEANER
 # Download, install, and run free ccleaner
 # You should run ccleaner if you have configured it previously 
-$VERSIONCC="526"
+$VERSIONCC=$ccleaner_ver
 
 # download
 $URL="http://download.piriform.com/ccsetup${VERSIONCC}.exe"
@@ -44,15 +57,14 @@ $INSTALLER="ccsetup${VERSIONCC}.exe"
 &$DESTDIR\$INSTALLER "/S"
 
 # run ccleaner
-$ccleaner = get-childitem "C:\prog*\ccleaner" -include ccleaner.exe -recurse
-# legacy TODO
+$ccleaner = which ccleaner.exe
 # do not run ccleaner until eventlog is fully checked
 # &$ccleaner "/auto"
 # launch ccleaner in interactive mode
 &$ccleaner
 
 # DEFRAGGLER
-$VERSIONDF="221"
+$VERSIONDF=$defraggler_ver
 
 # download
 $URL="http://download.piriform.com/dfsetup${VERSIONDF}.exe"
@@ -63,17 +75,14 @@ $INSTALLER="dfsetup${VERSIONDF}.exe"
 &$DESTDIR\$INSTALLER "/S"
 
 # run defraggler
-$defraggler = get-childitem "C:\prog*\defraggler" -include defraggler.exe -recurse
-# legacy TODO
+$defraggler = which defraggler.exe
 # launch defraggler in interactive mode
 &$defraggler
 
 # MALWAREBYTES
 # TODO Download and install
 # launch mbam
-$mbam = get-childitem "C:\prog*\malwarebytes*" -include mbam.exe -recurse
-# legacy windows launch mbam TODO
-# $mbam = get-childitem "C:\arch*\malwarebytes*" -include mbam.exe -recurse
+$mbam = which mbam.exe
 &$mbam
 
 # COMPMGMT
