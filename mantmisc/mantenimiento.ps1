@@ -6,8 +6,6 @@
 # use system env vars
 # integrate legacy systems
 
-$PAUSE = "cmd /c pause"
-
 # ERROR/SYS LOG
 get-eventlog -logname system -entrytype error,warning -newest 50 | Select-Object Index,TimeGenerated,EntryType,Source,EventID,InstanceId,Message | Out-GridView
 get-eventlog -logname application -entrytype error,warning -newest 50 | Select-Object Index,TimeGenerated,EntryType,Source,EventID,InstanceId,Message | Out-GridView
