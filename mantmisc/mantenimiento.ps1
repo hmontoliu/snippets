@@ -23,24 +23,24 @@ gci 'C:\Arch*\Cobian*\Settings\Logs\*' | sort LastWriteTime | select -last 7 | s
 # TODO
 # gci c:\backups\logs\* | select-string -Pattern 'Started|error|Copied|Inicio|error|Copiado' -Context 4
 
+
 # PROGRAM DOWNLOAD AND INSTALL
 $DESTDIR="c:\_administrador\programas"
 mkdir -force $DESTDIR
+
+function install($url, $dest) {
+    (New-Object System.Net.Webclient).DownloadFile($url, $dest)
+    &$dest "/S"
+}
 
 # CCLEANER
 # Download, install, and run free ccleaner
 # You should run ccleaner if you have configured it previously 
 $VERSIONCC="526"
-
-# download
-$URL="http://download.piriform.com/ccsetup${VERSIONCC}.exe"
 $INSTALLER="ccsetup${VERSIONCC}.exe"
+$URL="http://download.piriform.com/${INSTALLER}"
 
-# (New-Object System.Net.WebClient).DownloadFile($URL, $DESTDIR + "\" + [System.IO.Path]::GetFileName($URL))
-(New-Object System.Net.WebClient).DownloadFile($URL, $DESTDIR + "\" + $INSTALLER)
-
-# install
-&$DESTDIR\$INSTALLER "/S"
+install "${URL}" "${DESTDIR} + "\" + ${INSTALLER}"
 
 # run ccleaner
 $ccleaner = get-childitem "C:\prog*\ccleaner" -include ccleaner.exe -recurse
@@ -50,16 +50,13 @@ $ccleaner = get-childitem "C:\prog*\ccleaner" -include ccleaner.exe -recurse
 # launch ccleaner in interactive mode
 &$ccleaner
 
+
 # DEFRAGGLER
 $VERSIONDF="221"
-
-# download
-$URL="http://download.piriform.com/dfsetup${VERSIONDF}.exe"
 $INSTALLER="dfsetup${VERSIONDF}.exe"
-(New-Object System.Net.WebClient).DownloadFile($URL, $DESTDIR + "\" + $INSTALLER)
+$URL="http://download.piriform.com/${INSTALLER}"
 
-# install
-&$DESTDIR\$INSTALLER "/S"
+install "${URL}" "${DESTDIR} + "\" + ${INSTALLER}"
 
 # run defraggler
 $defraggler = get-childitem "C:\prog*\defraggler" -include defraggler.exe -recurse
@@ -67,8 +64,14 @@ $defraggler = get-childitem "C:\prog*\defraggler" -include defraggler.exe -recur
 # launch defraggler in interactive mode
 &$defraggler
 
+
 # MALWAREBYTES
-# TODO Download and install
+# Download and install
+$INSTALLER="mb3-setup-consumer-3.0.6.1469.exe"
+$URL="https://downloads.malwarebytes.com/file/mb3/"
+
+install "${URL}" "${DESTDIR} + "\" + ${INSTALLER}"
+
 # launch mbam
 $mbam = get-childitem "C:\prog*\malwarebytes*" -include mbam.exe -recurse
 # legacy windows launch mbam TODO
