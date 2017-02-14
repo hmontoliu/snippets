@@ -6,6 +6,7 @@
 # use system env vars
 # integrate legacy systems
 
+$PAUSE = "cmd /c pause"
 
 # ERROR/SYS LOG
 get-eventlog -logname system -entrytype error,warning -newest 50 | Select-Object Index,TimeGenerated,EntryType,Source,EventID,InstanceId,Message | Out-GridView
@@ -21,16 +22,16 @@ gci 'C:\Arch*\Cobian*\Settings\Logs\*' | sort LastWriteTime | select -last 7 | s
 
 # ROBOCOPY BACKUP SUMMARY
 # TODO
-# gci c:\backups\logs\* | select-string -Pattern 'Started|error|Copied|Inicio|error|Copiado' -Context 4
+# gci c:\_backups\logs\* | select-string -Pattern 'Started|error|Copied|Inicio|error|Copiado' -Context 4
 
 
 # PROGRAM DOWNLOAD AND INSTALL
 $DESTDIR="c:\_administrador\programas"
 mkdir -force $DESTDIR
 
-function install($url, $dest) {
+function install($url, $dest, $silent) {
     (New-Object System.Net.Webclient).DownloadFile($url, $dest)
-    &$dest "/S"
+    &$dest $silent
 }
 
 # CCLEANER
@@ -39,44 +40,45 @@ function install($url, $dest) {
 $VERSIONCC="526"
 $INSTALLER="ccsetup${VERSIONCC}.exe"
 $URL="http://download.piriform.com/${INSTALLER}"
+$DEST=${DESTDIR}+"\"+${INSTALLER}
 
-install "${URL}" "${DESTDIR} + "\" + ${INSTALLER}"
+install "${URL}" "${DEST}" "/S"
 
-# run ccleaner
-$ccleaner = get-childitem "C:\prog*\ccleaner" -include ccleaner.exe -recurse
+# TODO run ccleaner
+#$ccleaner = Get-ChildItem "C:\Program Files*\CCleaner\" -include CCleaner64.exe -recurse
 # legacy TODO
 # do not run ccleaner until eventlog is fully checked
 # &$ccleaner "/auto"
 # launch ccleaner in interactive mode
-&$ccleaner
-
+#&$ccleaner
 
 # DEFRAGGLER
 $VERSIONDF="221"
 $INSTALLER="dfsetup${VERSIONDF}.exe"
 $URL="http://download.piriform.com/${INSTALLER}"
+$DEST=$DESTDIR+"\"+$INSTALLER
 
-install "${URL}" "${DESTDIR} + "\" + ${INSTALLER}"
+install "${URL}" "${DEST}" "/S"
 
-# run defraggler
-$defraggler = get-childitem "C:\prog*\defraggler" -include defraggler.exe -recurse
+# TODO run defraggler
+#$defraggler = Get-ChildItem "C:\Program Files*\Defraggler\" -include Defragler.exe -recurse
 # legacy TODO
 # launch defraggler in interactive mode
-&$defraggler
-
+#&$defraggler
 
 # MALWAREBYTES
 # Download and install
 $INSTALLER="mb3-setup-consumer-3.0.6.1469.exe"
 $URL="https://downloads.malwarebytes.com/file/mb3/"
+$DEST=${DESTDIR}+"\"+${INSTALLER}
 
-install "${URL}" "${DESTDIR} + "\" + ${INSTALLER}"
+install "${URL}" "${DEST}" "/SILENT"
 
-# launch mbam
-$mbam = get-childitem "C:\prog*\malwarebytes*" -include mbam.exe -recurse
+# TODO launch mbam
+#$mbam = Get-ChildItem "C:\Program Files*\Malwarebytes*\Anti-Malware\" -include mbam.exe -recurse
 # legacy windows launch mbam TODO
 # $mbam = get-childitem "C:\arch*\malwarebytes*" -include mbam.exe -recurse
-&$mbam
+#&$mbam
 
 # COMPMGMT
 # open compmgmt.msc at end
