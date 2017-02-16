@@ -23,14 +23,20 @@ function getlog($logname) {
     }
 
 function downinstandexec([string[]]$arr) {
-	# TODO si existe la descarga saltar.
-	# download
-	(New-Object System.Net.WebClient).DownloadFile($arr[0], $arr[1])
-	# install
-	&$arr[1] + " " + $arr[3]
-	# exec
-	$exec = which $arr[2]
-	&$exec
+	$test = Test-Path $arr[1]
+    $exec = which $arr[2]
+    # comprobar que exista ya la descarga
+    If ($test -eq $True) {
+        & $exec
+    } else {
+	    # download
+	    (New-Object System.Net.WebClient).DownloadFile($arr[0], $arr[1])
+	    # install
+	    &$arr[1] + " " + $arr[3]
+	    # exec
+	    $exec = which $arr[2]
+	    & $exec
+    }
 }
 
 # ERROR/SYS LOG
@@ -71,7 +77,7 @@ $INSTALLER="mb3-setup-consumer-3.0.6.1469.exe"
 $URL="https://downloads.malwarebytes.com/file/mb3/"
 $DESTDIR = $localdir + "\" + $INSTALLER
 
-downinstandexec("${URL}","${DESTDIR}","mb3-setup-consumer-3.0.6.1469.exe", "/SILENT")
+downinstandexec("${URL}","${DESTDIR}","mbam.exe", "/SILENT")
 
 # COMPMGMT
 # open compmgmt.msc at end
