@@ -1,8 +1,10 @@
 snippets
 ========
 
-**./** -  Heterogeneous code/shell snippets for daily usage.
+**./informemigracion/** - Scripts for generating windows system reports 
 
-**./misc/** - Funny things to do in the shell
+**./linuxmisc/** - Miscellaneous linux scripts.
 
-**./informemigracion/** - misc windows system reports 
+**./mantmisc/** - Miscellaneous windows scripts.
+
+**./powershell_snippets -  Heterogeneous powershell code/shell snippets for daily usage. (quite outdated)
