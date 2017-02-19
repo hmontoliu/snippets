@@ -45,7 +45,7 @@ gci c:\_backups\logs\* -ErrorAction silentlycontinue |
     $_ | select-object `
       @{Name="Fichero"; Expression={$_.Filename}},
       @{Name="Linea";   Expression={$_.LineNumber}},
-      @{Name="Pre";     Expression={(($_.context.PreContext -join "`r`n"),
+      @{Name="Cadena";     Expression={(($_.context.PreContext -join "`r`n"),
                                      ($_.Line -join "`r`n"),
                                      ($_.context.PostContext -join "`r`n")) -join "`r`n"}}
     } | Out-GridView
