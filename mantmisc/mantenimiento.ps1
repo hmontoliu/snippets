@@ -38,7 +38,8 @@ gci ${env:programfiles}\Cobian*\Logs\*,
 #gci c:\_backups\logs\*  -ErrorAction silentlycontinue | select -last 7 | select-string -Pattern 'Started|error|Copied|Inicio|error|Copiado' -Context 4
 #$TMPFILE=[System.IO.Path]::GetTempFileName() # fichero temporal (TODO)
 $LASTLOGS=7
-gci c:\_backups\logs\*  -ErrorAction silentlycontinue | select -last $LASTLOGS |
+gci c:\_backups\logs\* -ErrorAction silentlycontinue | 
+ sort LastWriteTime | select -last $LASTLOGS |
  select-string -Pattern 'Started|error|Copied|Inicio|error|Copiado' -Context 4,4 | 
  foreach-object {
     $_ | select-object `
