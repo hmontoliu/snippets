@@ -35,7 +35,20 @@ gci ${env:programfiles}\Cobian*\Logs\*,
 
 # ROBOCOPY BACKUP SUMMARY
 # TODO, testing
-gci c:\_backups\logs\*  -ErrorAction silentlycontinue | select -last 7 | select-string -Pattern 'Started|error|Copied|Inicio|error|Copiado' -Context 4
+#gci c:\_backups\logs\*  -ErrorAction silentlycontinue | select -last 7 | select-string -Pattern 'Started|error|Copied|Inicio|error|Copiado' -Context 4
+#$TMPFILE=[System.IO.Path]::GetTempFileName() # fichero temporal (TODO)
+$LASTLOGS=7
+gci c:\_backups\logs\*  -ErrorAction silentlycontinue | select -last $LASTLOGS |
+ select-string -Pattern 'Started|error|Copied|Inicio|error|Copiado' -Context 4,4 | 
+ foreach-object {
+    $_ | select-object `
+      @{Name="Fichero"; Expression={$_.Filename}},
+      @{Name="Linea";   Expression={$_.LineNumber}},
+      @{Name="Pre";     Expression={(($_.context.PreContext -join "`r`n"),
+                                     ($_.Line -join "`r`n"),
+                                     ($_.context.PostContext -join "`r`n")) -join "`r`n"}}
+    } | Out-GridView
+
 
 # PROGRAM DOWNLOAD AND INSTALL (TODO: refactor as function; TODO: skip download if file already exists)
 $DESTDIR=$localdir
