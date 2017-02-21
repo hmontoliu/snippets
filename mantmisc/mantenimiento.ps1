@@ -22,6 +22,23 @@ function getlog($logname) {
     get-eventlog -logname $logname -entrytype $entrytype -Newest $entries | Select-Object $eventobjects | Out-GridView
     }
 
+function downinstandexec([string[]]$arr) {
+	$test = Test-Path $arr[1]
+    $exec = which $arr[2]
+    # comprobar que exista ya la descarga
+    If ($test -eq $True) {
+        & $exec
+    } else {
+	    # download
+	    (New-Object System.Net.WebClient).DownloadFile($arr[0], $arr[1])
+	    # install
+	    &$arr[1] + " " + $arr[3]
+	    # exec
+	    $exec = which $arr[2]
+	    & $exec
+    }
+}
+
 # ERROR/SYS LOG
 getlog system
 getlog application
@@ -52,52 +69,29 @@ gci c:\_backups\logs\* -ErrorAction silentlycontinue |
 
 
 # PROGRAM DOWNLOAD AND INSTALL (TODO: refactor as function; TODO: skip download if file already exists)
-$DESTDIR=$localdir
-mkdir -force $DESTDIR
+mkdir -force $localdir
 
 # CCLEANER
-# Download, install, and run free ccleaner
 # You should run ccleaner if you have configured it previously 
-$VERSIONCC=$ccleaner_ver
+$INSTALLER = "ccsetup${ccleaner_ver}.exe"
+$URL = "http://download.piriform.com/${INSTALLER}"
+$DESTDIR = $localdir + "\" + $INSTALLER
 
-# download
-$URL="http://download.piriform.com/ccsetup${VERSIONCC}.exe"
-$INSTALLER="ccsetup${VERSIONCC}.exe"
-
-# (New-Object System.Net.WebClient).DownloadFile($URL, $DESTDIR + "\" + [System.IO.Path]::GetFileName($URL))
-(New-Object System.Net.WebClient).DownloadFile($URL, $DESTDIR + "\" + $INSTALLER)
-
-# install
-&$DESTDIR\$INSTALLER "/S"
-
-# run ccleaner
-$ccleaner = which ccleaner.exe
-# do not run ccleaner until eventlog is fully checked
-# &$ccleaner "/auto"
-# launch ccleaner in interactive mode
-&$ccleaner
+downinstandexec("${URL}","${DESTDIR}","ccleaner.exe", "/S")
 
 # DEFRAGGLER
-$VERSIONDF=$defraggler_ver
+$INSTALLER="dfsetup${defraggler_ver}.exe"
+$URL="http://download.piriform.com/${INSTALLER}"
+$DESTDIR = $localdir + "\" + $INSTALLER
 
-# download
-$URL="http://download.piriform.com/dfsetup${VERSIONDF}.exe"
-$INSTALLER="dfsetup${VERSIONDF}.exe"
-(New-Object System.Net.WebClient).DownloadFile($URL, $DESTDIR + "\" + $INSTALLER)
-
-# install
-&$DESTDIR\$INSTALLER "/S"
-
-# run defraggler
-$defraggler = which defraggler.exe
-# launch defraggler in interactive mode
-&$defraggler
+downinstandexec("${URL}","${DESTDIR}","defraggler.exe", "/S")
 
 # MALWAREBYTES
-# TODO Download and install
-# launch mbam
-$mbam = which mbam.exe
-&$mbam
+$INSTALLER="mb3-setup-consumer-3.0.6.1469.exe"
+$URL="https://downloads.malwarebytes.com/file/mb3/"
+$DESTDIR = $localdir + "\" + $INSTALLER
+
+downinstandexec("${URL}","${DESTDIR}","mbam.exe", "/SILENT")
 
 # COMPMGMT
 # open compmgmt.msc at end
