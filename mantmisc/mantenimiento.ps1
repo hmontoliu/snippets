@@ -97,5 +97,7 @@ $INSTALLER="dfsetup${VERSIONDF}.exe"
 
 # COMPMGMT
 # open compmgmt.msc at end
-$compmgmt="compmgmt.msc"
-&$compmgmt
+&compmgmt.msc
+
+# reliability 
+&perfmon /rel
