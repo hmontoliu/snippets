@@ -4,7 +4,7 @@
 # -- H. Montoliu <hmontoliu@gmail.com>  Wed Jan 18 10:27:01 UTC 2017
 
 # Editable variables
-$ccleaner_ver = "526"
+$ccleaner_ver = "527"
 $defraggler_ver = "221"
 $localdir = "c:\_administrador\programas"
 
@@ -30,6 +30,7 @@ getlog application
 # search order: cobian 11, cobian 10, legacy
 gci ${env:programfiles}\Cobian*\Logs\*,
     ${env:programfiles}\Cobian*\Settings\Logs\*,
+    ${env:programfiles(x86)}\Cobian*\Logs\*, 
     ${env:programfiles(x86)}\Cobian*\Settings\Logs\* -ErrorAction silentlycontinue |
     sort LastWriteTime | select -last 7 | select-string 'error' -Context 4 | out-gridview
 
