@@ -71,12 +71,10 @@ $INSTALLER="ccsetup${VERSIONCC}.exe"
 # install
 &$DESTDIR\$INSTALLER "/S"
 
-# run ccleaner
-$ccleaner = which ccleaner.exe
-# do not run ccleaner until eventlog is fully checked
-# &$ccleaner "/auto"
+# do not run ccleaner automatically until eventlog is fully checked
+# &$(which ccleaner.exe) "/auto"
 # launch ccleaner in interactive mode
-&$ccleaner
+&$(which ccleaner.exe)
 
 # DEFRAGGLER
 $VERSIONDF=$defraggler_ver
@@ -89,16 +87,13 @@ $INSTALLER="dfsetup${VERSIONDF}.exe"
 # install
 &$DESTDIR\$INSTALLER "/S"
 
-# run defraggler
-$defraggler = which defraggler.exe
 # launch defraggler in interactive mode
-&$defraggler
+&$(which defraggler.exe)
 
 # MALWAREBYTES
 # TODO Download and install
 # launch mbam
-$mbam = which mbam.exe
-&$mbam
+&$(which mbam.exe)
 
 # COMPMGMT
 # open compmgmt.msc at end
