@@ -2,25 +2,50 @@
 # draft/beta
 # . { iwr -useb https://raw.githubusercontent.com/hmontoliu/snippets/master/mantmisc/mantenimiento.ps1 } | iex
 # -- H. Montoliu <hmontoliu@gmail.com>  Wed Jan 18 10:27:01 UTC 2017
+# -- Marcos Leal Sierra <marcoslealsierra90@gmail.com> 
+
 
 # Editable variables
 $ccleaner_ver = "527"
 $defraggler_ver = "221"
 $localdir = "c:\_administrador\programas"
 
+$herramientas = @()
+$herramientas += ,@("CCleaner", "CCleaner64.exe", "http://download.piriform.com/ccsetup${ccleaner_ver}.exe", "/S")
+$herramientas += ,@("Defraggler", "Defraggler64.exe", "http://download.piriform.com/dfsetup${defraggler_ver}.exe", "/S")
+# TODO MALWAREBYTES INSTALLATION WITHOUT CHROME BROWSER AUTOINSTALL
+#$herramientas += ,@("Malwarebytes", "mbam.exe", "https://xxxxxx", "/SILENT")
+
 # Common stuff
 function which($cmd) {
-     # find object in progrmafiles/programfiles(x86)/archivos de programa....
+     # Find object in progrmafiles/programfiles(x86)/archivos de programa....
      gci ${env:programfiles},${env:programfiles(x86)} -Include $cmd -Recurse -ErrorAction silentlycontinue | Select-Object -First 1
-     }
+}
 
 function getlog($logname) {
-    # parse and get event logs
+    # Parse and get event logs
     $entrytype="error","warning"
     $entries=50
     $eventobjects="Index","TimeGenerated","EntryType","Source","EventID","InstanceId","Message"
     get-eventlog -logname $logname -entrytype $entrytype -Newest $entries | Select-Object $eventobjects | Out-GridView
-    }
+}
+
+function dandi($array) {
+    # Download and silent install software
+	foreach($element in $array) {
+		$nombre = $element[0]
+		$binario = $element[1]
+		$url = $element[2]
+		$silent = $element[3]
+		$path = $localdir + "\" + $binario
+		(New-Object System.Net.Webclient).DownloadFile($url, $path)
+		&$path + " " + $silent
+	}
+}
+
+# DOWNLOAD AND INSTALL SOFTWARE
+mkdir -force $localdir
+dandi($herramientas)
 
 # ERROR/SYS LOG
 getlog system
@@ -51,49 +76,12 @@ gci c:\_backups\logs\* -ErrorAction silentlycontinue |
                                      ($_.context.PostContext -join "`r`n")) -join "`r`n"}}
     } | Out-GridView
 
-
-# PROGRAM DOWNLOAD AND INSTALL (TODO: refactor as function; TODO: skip download if file already exists)
-$DESTDIR=$localdir
-mkdir -force $DESTDIR
-
-# CCLEANER
-# Download, install, and run free ccleaner
-# You should run ccleaner if you have configured it previously 
-$VERSIONCC=$ccleaner_ver
-
-# download
-$URL="http://download.piriform.com/ccsetup${VERSIONCC}.exe"
-$INSTALLER="ccsetup${VERSIONCC}.exe"
-
-# (New-Object System.Net.WebClient).DownloadFile($URL, $DESTDIR + "\" + [System.IO.Path]::GetFileName($URL))
-(New-Object System.Net.WebClient).DownloadFile($URL, $DESTDIR + "\" + $INSTALLER)
-
-# install
-&$DESTDIR\$INSTALLER "/S"
-
 # do not run ccleaner automatically until eventlog is fully checked
 # &$(which ccleaner.exe) "/auto"
 # launch ccleaner in interactive mode
 &$(which ccleaner.exe)
-
-# DEFRAGGLER
-$VERSIONDF=$defraggler_ver
-
-# download
-$URL="http://download.piriform.com/dfsetup${VERSIONDF}.exe"
-$INSTALLER="dfsetup${VERSIONDF}.exe"
-(New-Object System.Net.WebClient).DownloadFile($URL, $DESTDIR + "\" + $INSTALLER)
-
-# install
-&$DESTDIR\$INSTALLER "/S"
-
-# launch defraggler in interactive mode
 &$(which defraggler.exe)
-
-# MALWAREBYTES
-# TODO Download and install
-# launch mbam
-&$(which mbam.exe)
+#&$(which mbam.exe)
 
 # COMPMGMT
 # open compmgmt.msc at end
