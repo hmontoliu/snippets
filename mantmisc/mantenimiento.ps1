@@ -8,7 +8,7 @@
 # Editable variables
 $ccleaner_ver = "527"
 $defraggler_ver = "221"
-$localdir = "c:\_administrador\programas"
+$localdir = "C:\_administrador\programas"
 
 $herramientas = `
 @("CCleaner", "ccsetup${ccleaner_ver}.exe", "http://download.piriform.com/ccsetup${ccleaner_ver}.exe", "/S"),
@@ -19,7 +19,7 @@ $herramientas = `
 # Common stuff
 function which($cmd) {
      # Find object in progrmafiles/programfiles(x86)/archivos de programa....
-     gci ${env:programfiles},${env:programfiles(x86)} -Include $cmd -Recurse -ErrorAction silentlycontinue | Select-Object -First 1
+     gci ${env:programfiles*} -Include $cmd -Recurse -ErrorAction silentlycontinue | Select-Object -First 1
 }
 
 function getlog($logname) {
@@ -39,7 +39,7 @@ function dandi($array) {
 		$silent = $element[3]
 		$path = $localdir + "\" + $instalador
 		(New-Object System.Net.Webclient).DownloadFile($url, $path)
-		&$path + " " + $silent
+		& $path $silent
 	}
 }
 
@@ -79,13 +79,13 @@ gci c:\_backups\logs\* -ErrorAction silentlycontinue |
 # do not run ccleaner automatically until eventlog is fully checked
 # &$(which ccleaner.exe) "/auto"
 # launch ccleaner in interactive mode
-&$(which ccleaner.exe)
-&$(which defraggler.exe)
+& $(which ccleaner.exe)
+& $(which defraggler.exe)
 #&$(which mbam.exe)
 
 # COMPMGMT
 # open compmgmt.msc at end
-&compmgmt.msc
+& compmgmt.msc
 
 # reliability 
-&perfmon /rel
+& perfmon /rel
