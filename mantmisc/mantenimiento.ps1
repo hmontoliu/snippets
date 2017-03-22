@@ -6,7 +6,7 @@
 
 
 # Editable variables
-$ccleaner_ver = "527"
+$ccleaner_ver = "528"
 $defraggler_ver = "221"
 $localdir = "C:\_administrador\programas"
 
@@ -19,7 +19,7 @@ $herramientas = `
 # Common stuff
 function which($cmd) {
      # Find object in progrmafiles/programfiles(x86)/archivos de programa....
-     gci ${env:programfiles*} -Include $cmd -Recurse -ErrorAction silentlycontinue | Select-Object -First 1
+     gci ${env:programfiles}, ${env:programfiles(x86)} -Include $cmd -Recurse -ErrorAction silentlycontinue | Select-Object -First 1
 }
 
 function getlog($logname) {
