@@ -6,20 +6,20 @@
 
 
 # Editable variables
-$ccleaner_ver = "527"
+$ccleaner_ver = "528"
 $defraggler_ver = "221"
 $localdir = "c:\_administrador\programas"
 
 $herramientas = `
-@("CCleaner", "CCleaner64.exe", "http://download.piriform.com/ccsetup${ccleaner_ver}.exe", "/S"),
-@("Defraggler", "Defraggler64.exe", "http://download.piriform.com/dfsetup${defraggler_ver}.exe", "/S")
+@("CCleaner", "CCleaner.exe", "http://download.piriform.com/ccsetup${ccleaner_ver}.exe", "/S"),
+@("Defraggler", "Defraggler.exe", "http://download.piriform.com/dfsetup${defraggler_ver}.exe", "/S")
 # TODO MALWAREBYTES INSTALLATION WITHOUT CHROME BROWSER AUTOINSTALL
 #$herramientas += ,@("Malwarebytes", "mbam.exe", "https://xxxxxx", "/SILENT")
 
 # Common stuff
 function which($cmd) {
      # Find object in progrmafiles/programfiles(x86)/archivos de programa....
-     gci ${env:programfiles},${env:programfiles(x86)} -Include $cmd -Recurse -ErrorAction silentlycontinue | Select-Object -First 1
+     gci ${env:programfiles}, ${env:programfiles(x86)} -Include $cmd -Recurse -ErrorAction silentlycontinue | Select-Object -First 1
 }
 
 function getlog($logname) {
