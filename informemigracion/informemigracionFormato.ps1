@@ -132,18 +132,18 @@ $operatingsystem = Get-WMIObject Win32_OperatingSystem  |
 
 $nic = Get-WmiObject win32_networkadapterConfiguration  -Filter "Ipenabled=True" | foreach-object {
     $_ | select-object `
-      @{Name="MACAddress";       Expression={$_.MACAddress}},
-      @{Name="IPAddress";        Expression={$_.IPAddress -join ', '}}, # necesario para mostar arrays en html
-      @{Name="IPSubnet";         Expression={$_.IPSubnet}}, 
-      @{Name="DefaultIPGateway"; Expression={$_.DefaultIPGateway -join ', '}},
-      @{Name="DHCPEnabled";      Expression={$_.DHCPEnabled}},
+      @{Name="MAC";       Expression={$_.MACAddress}},
+      @{Name="IP";        Expression={$_.IPAddress -join ', '}}, # necesario para mostar arrays en html
+      @{Name="Subnet";         Expression={$_.IPSubnet}}, 
+      @{Name="Gateway"; Expression={$_.DefaultIPGateway -join ', '}},
+      @{Name="DHCP";      Expression={$_.DHCPEnabled}},
       @{Name="DHCPServer";       Expression={$_.DHCPServer}},
       @{Name="DNSDomain";        Expression={$_.DNSDomain}},
-      @{Name="DNSServerSearchOrder";   Expression={$_.DNSServerSearchOrder -join ', '}},
+      @{Name="DNS";   Expression={$_.DNSServerSearchOrder -join ', '}},
       @{Name="Description";      Expression={$_.Description}}
 } |
      ConvertTo-Html `
-     -Fragment name, MACAddress, IPAddress, IPSubnet, DefaultIPGateway, DHCPEnabled, DHCPServer, DNSDomain, DNSServerSearchOrder, Description `
+     -Fragment name, MAC, IP, Subnet, Gateway, DHCP, DHCPServer, DNSDomain, DNS, Description `
      -precontent "<div id='nic'><h3>Interfaces de red operativas (configuraci&oacute;n)</h3>" `
      -postcontent "</div>" |
      Out-String
