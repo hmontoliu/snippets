@@ -6,7 +6,7 @@
 
 
 # Editable variables
-$ccleaner_ver = "528"
+$ccleaner_ver = "529"
 $defraggler_ver = "221"
 $localdir = "c:\_administrador\programas"
 
