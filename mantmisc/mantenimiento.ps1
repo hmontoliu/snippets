@@ -1,12 +1,13 @@
 # mantenimiento.ps1
 # draft/beta
+# Download & exec in PowerShell 3.1.0 or higher
 # . { iwr -useb https://raw.githubusercontent.com/hmontoliu/snippets/master/mantmisc/mantenimiento.ps1 } | iex
 # -- H. Montoliu <hmontoliu@gmail.com>  Wed Jan 18 10:27:01 UTC 2017
 # -- Marcos Leal Sierra <marcoslealsierra90@gmail.com> 
 
 
 # Editable variables
-$ccleaner_ver = "529"
+$ccleaner_ver = "530"
 $defraggler_ver = "221"
 $localdir = "c:\_administrador\programas"
 
