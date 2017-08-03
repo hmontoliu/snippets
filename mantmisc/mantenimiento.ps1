@@ -90,3 +90,11 @@ gci c:\_backups\logs\* -ErrorAction silentlycontinue |
 
 # reliability 
 &perfmon /rel
+
+# windows update
+# panel
+control /name Microsoft.WindowsUpdate
+# check upgrades
+wuauclt.exe /detectnow
+# autoinstall (Disabled)
+# wuauclt.exe /detectnow /updatenow
