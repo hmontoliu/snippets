@@ -6,7 +6,7 @@
 # -- Marcos Leal Sierra <marcoslealsierra90@gmail.com> 
 
 
-# Editable variables
+# customizable variables
 $ccleaner_ver = "532"
 $defraggler_ver = "221"
 $localdir = "c:\_administrador\programas"
@@ -44,15 +44,18 @@ function dandi($array) {
 	}
 }
 
-# DOWNLOAD AND INSTALL SOFTWARE
+# download and install software
 mkdir -force $localdir
 dandi($herramientas)
 
-# ERROR/SYS LOG
+# Create restore point
+Checkpoint-Computer -Description "Mantenimiento"
+
+# error/sys log
 getlog system
 getlog application
 
-# COBIAN BACKUP SUMMARY
+# cobian backup summary
 # search order: cobian 11, cobian 10, legacy
 gci ${env:programfiles}\Cobian*\Logs\*,
     ${env:programfiles}\Cobian*\Settings\Logs\*,
@@ -60,7 +63,7 @@ gci ${env:programfiles}\Cobian*\Logs\*,
     ${env:programfiles(x86)}\Cobian*\Settings\Logs\* -ErrorAction silentlycontinue |
     sort LastWriteTime | select -last 7 | select-string 'error' -Context 4 | out-gridview
 
-# ROBOCOPY BACKUP SUMMARY
+# robocopy backup summary
 # TODO, testing
 #gci c:\_backups\logs\*  -ErrorAction silentlycontinue | select -last 7 | select-string -Pattern 'Started|error|Copied|Inicio|error|Copiado' -Context 4
 #$TMPFILE=[System.IO.Path]::GetTempFileName() # fichero temporal (TODO)
@@ -84,7 +87,7 @@ gci c:\_backups\logs\* -ErrorAction silentlycontinue |
 &$(which defraggler.exe)
 #&$(which mbam.exe)
 
-# COMPMGMT
+# compmgmt
 # open compmgmt.msc at end
 &compmgmt.msc
 
