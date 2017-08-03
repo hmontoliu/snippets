@@ -48,7 +48,7 @@ function dandi($array) {
 mkdir -force $localdir
 dandi($herramientas)
 
-# Create restore point
+# Create restore point (recommended)
 Checkpoint-Computer -Description "Mantenimiento"
 
 # error/sys log
