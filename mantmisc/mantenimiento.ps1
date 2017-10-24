@@ -7,7 +7,7 @@
 
 
 # customizable variables
-$ccleaner_ver = "532"
+$ccleaner_ver = "536"
 $defraggler_ver = "221"
 $localdir = "c:\_administrador\programas"
 
@@ -94,6 +94,9 @@ gci c:\_backups\logs\* -ErrorAction silentlycontinue |
 
 # reliability 
 &perfmon /rel
+
+# hardware diagnostic
+&perfmon /report
 
 # windows update
 # panel
