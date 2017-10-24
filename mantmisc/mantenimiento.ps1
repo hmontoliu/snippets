@@ -92,10 +92,10 @@ gci c:\_backups\logs\* -ErrorAction silentlycontinue |
 # open compmgmt.msc at end
 &compmgmt.msc
 
-# reliability 
+# system reliability 
 &perfmon /rel
 
-# hardware diagnostic
+# system diagnostic
 &perfmon /report
 
 # windows update
