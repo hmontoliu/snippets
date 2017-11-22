@@ -2,7 +2,7 @@
 # vim:ts=4:sw=4:et:
 # Description: informe de migración de equipos
 # powershell -executionpolicy unrestricted ./script.ps1
-# . { iwr -useb https://raw.githubusercontent.com/hmontoliu/snippets/master/informemigracion/informemigracionFormato.ps1 } | iex
+# . { iwr -useb https://raw.githubusercontent.com/hmontoliu/snippets/master/informemigracion/informemigracion.ps1 } | iex
 # Created: 2016-11-18
 # Copyright (c) 2016: Hilario J. Montoliu <hmontoliu@gmail.com>
  
