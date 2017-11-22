@@ -5,7 +5,6 @@
 # -- H. Montoliu <hmontoliu@gmail.com>  Wed Jan 18 10:27:01 UTC 2017
 # -- Marcos Leal Sierra <marcoslealsierra90@gmail.com> 
 
-
 # Variables
 $ccleaner_ver = "536"
 $defraggler_ver = "221"
@@ -17,7 +16,7 @@ mkdir -force $DESTDIR
 
 $herramientas = `
 @("CCleaner", "CCleaner.exe", "http://download.piriform.com/ccsetup${ccleaner_ver}.exe", "/S"),
-@("Defraggler", "Defraggler.exe", "http://download.piriform.com/dfsetup${defraggler_ver}.exe", "/S")
+@("Defraggler", "Defraggler.exe", "http://download.piriform.com/dfsetup${defraggler_ver}.exe", "/S"),
 @("Malwarebytes", "mbam.exe", "https://data-cdn.mbamupdates.com/web/mb3-setup-consumer/mb3-setup-consumer-3.1.2.1733-1.0.160-1.0.2251.exe", "/S")
 # TODO MALWAREBYTES INSTALLATION WITHOUT CHROME BROWSER AUTOINSTALL
 #$herramientas += ,@("Malwarebytes", "mbam.exe", "https://xxxxxx", "/SILENT")
