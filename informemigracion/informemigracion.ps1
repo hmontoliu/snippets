@@ -16,9 +16,68 @@
 $computername = $ENV:COMPUTERNAME
 $username = "${ENV:USERNAME}@${ENV:USERDOMAIN}"
 $outdir = "C:\temp\" 
-$OUTFILE = "${outdir}\${computername}-${username}.html" 
+$localdir = "c:\_administrador\programas"
+ 
 New-Item -ItemType Directory -Force -Path "$outdir"
+New-Item -ItemType Directory -Force -Path "$localdir"
 
+$OUTFILE = "${outdir}\${computername}-${username}.html"
+
+# Create restore point (recommended)
+echo "Creating restore point ..."
+Checkpoint-Computer -Description "Migracion"
+
+# auxiliar functions to install third party apps (last ver in mantenimiento.ps1)
+$herramientas = `
+@("ProduKey", "ProduKey.exe", "http://www.nirsoft.net/utils/produkey_setup.exe", "/S", "uninst.exe"),
+#@("MailPV", "mailpv.exe", "http://www.nirsoft.net/toolsdownload/mailpv_setup.exe", "/S", "uninst.exe"),
+"" #necesario
+
+# Common stuff
+function which($cmd) {
+     # Find object in progrmafiles/programfiles(x86)/archivos de programa....
+     gci ${env:programfiles}, ${env:programfiles(x86)} -Include $cmd -Recurse -ErrorAction silentlycontinue | Select-Object -First 1
+}
+
+function dandi($appsarray) {
+    # Download and silent install software
+	foreach($element in $appsarray) {
+        if ($element.GetType() -eq  $appsarray.GetType()) {
+		$nombre = $element[0]
+		$binario = $element[1]
+		$url = $element[2]
+		$silent = $element[3]
+        $uninstall = $element[4] # not used here
+		$path = $localdir + "\" + $binario
+        echo "Downloading $nombre ..."
+		(New-Object System.Net.Webclient).DownloadFile($url, $path)
+        echo "Installing $nombre ..."
+		&$path + " " + $silent
+    }
+	}
+}
+
+# for later cleanup
+function uninstallstuffbydandi($appsarray) {
+    # Download and silent install software
+	foreach($element in $appsarray) {
+        if ($element.GetType() -eq  $appsarray.GetType()) {
+		$nombre = $element[0]
+		$binario = $element[1]
+		$url = $element[2]
+		$silent = $element[3]
+        $uninstall = $element[4]
+        echo "Uninstalling $nombre ..."
+        &(Join-Path (split-path (which $binario)) $uninstall) /S
+    }
+	}
+}
+
+# download and install third party software
+echo "Installing third party apps..."
+dandi($herramientas)
+
+# document
 $head = @"
 <?xml version="1.0" encoding="utf-8"?>
 <!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
@@ -155,6 +214,13 @@ $localusers = Get-WmiObject win32_UserAccount |
      -postcontent "</div>" | 
      Out-String
 
+$antivirus = Get-WmiObject -Namespace "root\securityCenter2" -Query "Select * From AntiVirusProduct" |
+     Select-Object displayName, pathToSignedProductExe, timestamp |
+     ConvertTo-Html -Fragment `
+     -precontent "<div id='antiviruss'><h3>Antivirus instalado</h3>"`
+     -postcontent "</div>" | 
+     Out-String     
+
 $logicaldisk = Get-WMIObject Win32_logicaldisk |
      ConvertTo-Html -Fragment DeviceID, DriveType, ProviderName, Size, FreeSpace, VolumeName `
      -precontent "<div id='drives'><h3>Unidades locales y unidades de red</h3>"`
@@ -218,6 +284,14 @@ $certificados =  Get-ChildItem cert:\currentuser\my |
      -precontent "<div id='certificados'><h3>Certificados del usuario</h3>"`
      -postcontent "</div>" | 
      Out-String
+
+# licencias
+$tmplicfile = "c:/temp/produkey.html"
+&(which produkey.exe) /shtml $tmplicfile
+echo "Waiting 10 seconds to complete license checking..."
+start-sleep 10
+[string]$licencias = Get-Content $tmplicfile
+#remove-item -Path $tmplicfile
 
 $emaillist = @"
 <div id='emaillist'><h3>Listado de cuentas de correo</h3>
@@ -354,6 +428,8 @@ $notas = @"
     $share, 
     $impresoras,
     $impresorasred,
+    $licencias,
+    $antivirus,
     $emaillist,
     $tareashtml,
     $certificados,
@@ -363,4 +439,10 @@ $notas = @"
     $notas,
     $footer > $OUTFILE
 
+# uninstall installed third party apps
+echo "Uninstalling previously installed third party apps..."
+uninstallstuffbydandi($herramientas)
+
 Invoke-Item $OUTFILE
+
+
