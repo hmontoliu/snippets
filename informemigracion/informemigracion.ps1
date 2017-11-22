@@ -39,6 +39,7 @@ function which($cmd) {
      gci ${env:programfiles}, ${env:programfiles(x86)} -Include $cmd -Recurse -ErrorAction silentlycontinue | Select-Object -First 1
 }
 
+# install third party apps
 function dandi($appsarray) {
     # Download and silent install software
 	foreach($element in $appsarray) {
@@ -59,7 +60,7 @@ function dandi($appsarray) {
 
 # for later cleanup
 function uninstallstuffbydandi($appsarray) {
-    # Download and silent install software
+    # silent uninstall previously installed software
 	foreach($element in $appsarray) {
         if ($element.GetType() -eq  $appsarray.GetType()) {
 		$nombre = $element[0]
