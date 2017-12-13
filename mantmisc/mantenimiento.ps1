@@ -49,11 +49,11 @@ function dandi($appsarray) {
 		$url = $element[2]
 		$silent = $element[3]
         $uninstall = $element[4] # not used here
-		$path = $localdir + "\" + $binario
+		$installerpath = $localdir + "\" + $binario
         echo "Downloading $nombre ..."
 		(New-Object System.Net.Webclient).DownloadFile($url, $path)
         echo "Installing $nombre ..."
-		&$path + " " + $silent
+		&$installerpath + " " + $silent
     }
 	}
 }
