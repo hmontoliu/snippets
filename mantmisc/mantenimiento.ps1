@@ -6,7 +6,7 @@
 # -- Marcos Leal Sierra <marcoslealsierra90@gmail.com> 
 
 # Variables
-$ccleaner_ver = "536"
+$ccleaner_ver = "538"
 $defraggler_ver = "221"
 $localdir = "c:\_administrador\programas"
 
@@ -14,10 +14,14 @@ $localdir = "c:\_administrador\programas"
 $DESTDIR=$localdir
 mkdir -force $DESTDIR
 
+# Create restore point (recommended)
+echo "Creating a restore point..."
+Checkpoint-Computer -Description "Mantenimiento"
+
 $herramientas = `
-@("CCleaner", "CCleaner.exe", "http://download.piriform.com/ccsetup${ccleaner_ver}.exe", "/S"),
-@("Defraggler", "Defraggler.exe", "http://download.piriform.com/dfsetup${defraggler_ver}.exe", "/S"),
-@("Malwarebytes", "mbam.exe", "https://data-cdn.mbamupdates.com/web/mb3-setup-consumer/mb3-setup-consumer-3.1.2.1733-1.0.160-1.0.2251.exe", "/S")
+@("CCleaner", "CCleaner.exe", "http://download.piriform.com/ccsetup${ccleaner_ver}.exe", "/S", "uninst.exe"),
+@("Defraggler", "Defraggler.exe", "http://download.piriform.com/dfsetup${defraggler_ver}.exe", "/S", "uninst.exe"),
+@("Malwarebytes", "mbam.exe", "https://data-cdn.mbamupdates.com/web/mb3-setup-consumer/mb3-setup-consumer-3.1.2.1733-1.0.160-1.0.2251.exe", "/S", "uninst.exe")
 # TODO MALWAREBYTES INSTALLATION WITHOUT CHROME BROWSER AUTOINSTALL
 #$herramientas += ,@("Malwarebytes", "mbam.exe", "https://xxxxxx", "/SILENT")
 
@@ -35,24 +39,44 @@ function getlog($logname) {
     get-eventlog -logname $logname -entrytype $entrytype -Newest $entries | Select-Object $eventobjects | Out-GridView
 }
 
-function dandi($array) {
+# install third party apps
+function dandi($appsarray) {
     # Download and silent install software
-	foreach($element in $array) {
+	foreach($element in $appsarray) {
+        if ($element.GetType() -eq  $appsarray.GetType()) {
 		$nombre = $element[0]
 		$binario = $element[1]
 		$url = $element[2]
 		$silent = $element[3]
+        $uninstall = $element[4] # not used here
 		$path = $localdir + "\" + $binario
+        echo "Downloading $nombre ..."
 		(New-Object System.Net.Webclient).DownloadFile($url, $path)
+        echo "Installing $nombre ..."
 		&$path + " " + $silent
+    }
 	}
 }
 
-# download and install software
-dandi($herramientas)
+# for later cleanup
+function uninstallstuffbydandi($appsarray) {
+    # silent uninstall previously installed software
+	foreach($element in $appsarray) {
+        if ($element.GetType() -eq  $appsarray.GetType()) {
+		$nombre = $element[0]
+		$binario = $element[1]
+		$url = $element[2]
+		$silent = $element[3]
+        $uninstall = $element[4]
+        echo "Uninstalling $nombre ..."
+        &(Join-Path (split-path (which $binario)) $uninstall) /S
+    }
+	}
+}
 
-# Create restore point (recommended)
-Checkpoint-Computer -Description "Mantenimiento"
+# download and install third party software
+echo "Installing third party apps..."
+dandi($herramientas)
 
 # error/sys log
 getlog system
@@ -107,3 +131,8 @@ control /name Microsoft.WindowsUpdate
 wuauclt.exe /detectnow
 # autoinstall (Disabled)
 # wuauclt.exe /detectnow /updatenow
+
+# uninstall installed third party apps
+#echo "Uninstalling previously installed third party apps..."
+#uninstallstuffbydandi($herramientas)
+
