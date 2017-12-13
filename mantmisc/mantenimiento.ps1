@@ -79,11 +79,14 @@ echo "Installing third party apps..."
 dandi($herramientas)
 
 # error/sys log
+echo "Opening system log..."
 getlog system
+echo "Opening application log..."
 getlog application
 
 # cobian backup summary
 # search order: cobian 11, cobian 10, legacy
+echo "Checking cobian backup history..."
 gci ${env:programfiles}\Cobian*\Logs\*,
     ${env:programfiles}\Cobian*\Settings\Logs\*,
     ${env:programfiles(x86)}\Cobian*\Logs\*, 
@@ -94,6 +97,7 @@ gci ${env:programfiles}\Cobian*\Logs\*,
 # TODO, testing
 #gci c:\_backups\logs\*  -ErrorAction silentlycontinue | select -last 7 | select-string -Pattern 'Started|error|Copied|Inicio|error|Copiado' -Context 4
 #$TMPFILE=[System.IO.Path]::GetTempFileName() # fichero temporal (TODO)
+echo "Checking robocopy backup history..."
 $LASTLOGS=7
 gci c:\_backups\logs\* -ErrorAction silentlycontinue | 
  sort LastWriteTime | select -last $LASTLOGS |
@@ -110,26 +114,33 @@ gci c:\_backups\logs\* -ErrorAction silentlycontinue |
 # do not run ccleaner automatically until eventlog is fully checked
 # &$(which ccleaner.exe) "/auto"
 # launch ccleaner in interactive mode
+echo "Opening third party apps..."
 &$(which ccleaner.exe)
 &$(which defraggler.exe)
 &$(which mbam.exe)
 
 # compmgmt
 # open compmgmt.msc at end
+echo "Opening computer management..."
 &compmgmt.msc
 
 # system reliability 
+echo "Opening computer reliability reports..."
 &perfmon /rel
 
 # system diagnostic
+echo "Opening computer diagnostic reports..."
 &perfmon /report
 
 # windows update
 # panel
+echo "Opening windows update..."
 control /name Microsoft.WindowsUpdate
 # check upgrades
+echo "Checking for windows udpates..."
 wuauclt.exe /detectnow
 # autoinstall (Disabled)
+#echo "Installing available windows udpates..."
 # wuauclt.exe /detectnow /updatenow
 
 # uninstall installed third party apps
