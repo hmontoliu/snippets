@@ -248,7 +248,8 @@ $share = Get-WMIObject Win32_share |
 
 # listado de credenciales del usuario
 $cmdcredtitle = "Listado de credenciales del usuario: ${env:USERNAME}"
-$cmdcredhtml = "<div id='cmdcredtitle'><h3>$cmdcredtitle</h3><pre>$(cmdkey /list)</pre></div>" 
+$cmdcredtxt = cmdkey /list | out-string
+$cmdcredhtml = "<div id='cmdcredtitle'><h3>$cmdcredtitle</h3><pre>${cmdcredtxt}</pre></div>" 
 
 # tareas programadas
 $tareastitle = "Listado de tareas programadas (taskpath '\')"
