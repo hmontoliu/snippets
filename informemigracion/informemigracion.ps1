@@ -430,6 +430,7 @@ $notas = @"
     $localusers, 
     $logicaldisk, 
     $share, 
+    $cmdcredhtml,
     $impresoras,
     $impresorasred,
     $licencias,
