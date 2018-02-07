@@ -6,7 +6,7 @@
 # -- Marcos Leal Sierra <marcoslealsierra90@gmail.com> 
 
 # Variables
-$ccleaner_ver = "538"
+$ccleaner_ver = "539"
 $defraggler_ver = "221"
 $localdir = "c:\_administrador\programas"
 
