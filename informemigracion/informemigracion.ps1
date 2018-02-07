@@ -446,4 +446,4 @@ uninstallstuffbydandi($herramientas)
 
 Invoke-Item $OUTFILE
 
-
+echo "Exiting..."

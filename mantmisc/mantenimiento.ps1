@@ -147,3 +147,4 @@ wuauclt.exe /detectnow
 #echo "Uninstalling previously installed third party apps..."
 #uninstallstuffbydandi($herramientas)
 
+echo "Exiting..."
