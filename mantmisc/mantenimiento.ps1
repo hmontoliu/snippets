@@ -6,7 +6,7 @@
 # -- Marcos Leal Sierra <marcoslealsierra90@gmail.com> 
 
 # Variables
-$ccleaner_ver = "539"
+$ccleaner_ver = "540"
 $defraggler_ver = "221"
 $localdir = "c:\_administrador\programas"
 
@@ -51,7 +51,7 @@ function dandi($appsarray) {
         $uninstall = $element[4] # not used here
 		$installerpath = $localdir + "\" + $binario
         echo "Downloading $nombre ..."
-		(New-Object System.Net.Webclient).DownloadFile($url, $path)
+		(New-Object System.Net.Webclient).DownloadFile($url, $installerpath)
         echo "Installing $nombre ..."
 		&$installerpath + " " + $silent
     }
