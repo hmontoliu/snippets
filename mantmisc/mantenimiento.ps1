@@ -19,7 +19,7 @@ echo "Creating a restore point..."
 Checkpoint-Computer -Description "Mantenimiento"
 
 $herramientas = `
-@("CCleaner", "CCleaner.exe", "http://download.ccleaner.com/ccsetup540.exe/ccsetup${ccleaner_ver}.exe", "/S", "uninst.exe"),
+@("CCleaner", "CCleaner.exe", "http://download.ccleaner.com/ccsetup${ccleaner_ver}.exe", "/S", "uninst.exe"),
 @("Defraggler", "Defraggler.exe", "http://download.piriform.com/dfsetup${defraggler_ver}.exe", "/S", "uninst.exe"),
 @("Malwarebytes", "mbam.exe", "https://data-cdn.mbamupdates.com/web/mb3-setup-consumer/mb3-setup-consumer-3.1.2.1733-1.0.160-1.0.2251.exe", "/S", "uninst.exe")
 # TODO MALWAREBYTES INSTALLATION WITHOUT CHROME BROWSER AUTOINSTALL
