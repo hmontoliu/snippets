@@ -1,8 +1,8 @@
 // ==UserScript==
 // @name        otrs_tiempos_from
 // @namespace   none
-// @description rellena TimeUnits a partir de los customfields
-// @include  https://*/otrs/*
+// @description colorea las filas con tareas a la espera
+// @include     https://satebm.dnsalias.com/otrs/*
 // @require  http://ajax.googleapis.com/ajax/libs/jquery/1.8.3/jquery.min.js
 // @require  https://gist.github.com/raw/2625891/waitForKeyElements.js
 // @grant    GM_addStyle
@@ -39,7 +39,7 @@ fin = new Date($('#DynamicField_arthorafinYear').val(),
 
 var timediff = fin - inicio ;
 
-$('#TimeUnits').val(timediff/60000);
+$('#TimeUnits').val(timediff/60000||0);
 
 
 });
