@@ -20,7 +20,7 @@ Checkpoint-Computer -Description "Mantenimiento"
 
 $herramientas = `
 @("CCleaner", "CCleaner.exe", "http://download.ccleaner.com/ccsetup${ccleaner_ver}.exe", "/S", "uninst.exe"),
-@("Defraggler", "Defraggler.exe", "http://download.piriform.com/dfsetup${defraggler_ver}.exe", "/S", "uninst.exe"),
+@("Defraggler", "Defraggler.exe", "http://download.ccleaner.com/dfsetup${defraggler_ver}.exe", "/S", "uninst.exe")
 @("Malwarebytes", "mbam.exe", "https://data-cdn.mbamupdates.com/web/mb3-setup-consumer/mb3-setup-consumer-3.3.1.2183-1.0.262-1.0.4124.exe", "/S", "uninst.exe")
 
 # Common stuff
