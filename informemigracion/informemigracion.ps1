@@ -229,7 +229,7 @@ $logicaldisk = Get-WMIObject Win32_logicaldisk |
      Out-String
  
 $impresoras = Get-WMIObject Win32_printer |
-     ConvertTo-Html -Fragment name, sharename, status `
+     ConvertTo-Html -Fragment name, sharename, status, portname, drivername `
      -precontent "<div id='printers'><h3>Impresoras</h3>"`
      -postcontent "</div>" | 
      Out-String
