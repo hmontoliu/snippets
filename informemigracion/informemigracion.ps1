@@ -226,16 +226,16 @@ $localusers = Get-WmiObject win32_UserAccount |
      -postcontent "</div>" | 
      Out-String
 
-### $localgroups = Get-WMIObject win32_group -filter "LocalAccount='True'" |
-###   Select PSComputername,Name,@{Name="Members";Expression={
-###    $_.GetRelated("win32_useraccount").Name -join ";"
-###   }}
+### ### $localgroups = Get-WMIObject win32_group -filter "LocalAccount='True'" |
+### ###   Select PSComputername,Name,@{Name="Members";Expression={
+### ###    $_.GetRelated("win32_useraccount").Name -join ";"
+### ###   }}
 
-echo "Obteniendo relaciones de grupos con cuentas de usuario local..."
-$localgroups = Get-WMIObject win32_group -filter "LocalAccount='True'" | ForEach-Object -Process {write-host "`n$($_.Name): "-nonewline; $_.GetRelated("Win32_Account","Win32_GroupUser","","","PartComponent","GroupComponent",$FALSE,$NULL) | select -ExpandProperty Name | ForEach-Object -Process {write-host "$($_), " -nonewline}} | ConvertTo-Html -Fragment `
-     -precontent "<div id='localgroups'><h3>Relación cuentas locales con grupos locales</h3><pre>"`
-     -postcontent "</pre></div>" | 
-     Out-String
+### echo "Obteniendo relaciones de grupos con cuentas de usuario local..."
+### $localgroups = Get-WMIObject win32_group -filter "LocalAccount='True'" | ForEach-Object -Process {"`n$($_.Name): "; $_.GetRelated("Win32_Account","Win32_GroupUser","","","PartComponent","GroupComponent",$FALSE,$NULL) | select -ExpandProperty Name | ForEach-Object -Process {"$($_), " }} | ConvertTo-Html -Fragment `
+###      -precontent "<div id='localgroups'><h3>Relación cuentas locales con grupos locales</h3><pre>"`
+###      -postcontent "</pre></div>" | 
+###      Out-String
 
 echo "Obteniendo datos de antivirus..."
 $antivirus = Get-WmiObject -Namespace "root\securityCenter2" -Query "Select * From AntiVirusProduct" |
@@ -254,7 +254,7 @@ $logicaldisk = Get-WMIObject Win32_logicaldisk |
  
 echo "Obteniendo datos de impresoras..."
 $impresoras = Get-WMIObject Win32_printer |
-     ConvertTo-Html -Fragment name, sharename, status, portname, drivername `
+     ConvertTo-Html -Fragment name, sharename, status `
      -precontent "<div id='printers'><h3>Impresoras</h3>"`
      -postcontent "</div>" | 
      Out-String
@@ -454,7 +454,7 @@ $notas = @"
     $operatingsystem, 
     $nic, 
     $localusers, 
-    $localgroups, 
+###     $localgroups, 
     $logicaldisk, 
     $share, 
     $impresoras,
