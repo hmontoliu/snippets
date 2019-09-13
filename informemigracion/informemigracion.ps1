@@ -178,18 +178,21 @@ Hilario J. Montoliu (hmontoliu at gmail.com)
 </html>
 '
 
+echo "Obteniendo datos de equipo..."
 $computersystem = Get-WmiObject win32_computersystem |
      ConvertTo-Html -Fragment name, domain, model `
      -precontent "<div id='equipo'><h3>Nombre, dominio/grupo de trabajo y modelo del equipo</h3>"`
      -postcontent "</div>" | 
      Out-String
 
+echo "Obteniendo datos de sistema..."
 $operatingsystem = Get-WMIObject Win32_OperatingSystem  |
      ConvertTo-Html -Fragment Caption, OSArchitecture,  ServicePackMajorVersion `
      -precontent "<div id='os'><h3>Detalle del sistema operativo</h3>"`
      -postcontent "</div>" | 
      Out-String
 
+echo "Obteniendo datos de red..."
 $nic = Get-WmiObject win32_networkadapterConfiguration  -Filter "Ipenabled=True" | foreach-object {
     $_ | select-object `
       @{Name="MAC";       Expression={$_.MACAddress}},
@@ -208,6 +211,14 @@ $nic = Get-WmiObject win32_networkadapterConfiguration  -Filter "Ipenabled=True"
      -postcontent "</div>" |
      Out-String
 
+echo "Obteniendo datos de productos..."
+$aplicaciones = Get-WMIObject Win32_Product  |
+     ConvertTo-Html -Fragment Caption, Name, Vendor, Version, InstallDate `
+     -precontent "<div id='os'><h3>Software instalado</h3>"`
+     -postcontent "</div>" |
+     Out-String
+
+echo "Obteniendo datos de cuentas de usuario local..."
 $localusers = Get-WmiObject win32_UserAccount | 
      Select-Object name, @{N="password";E={$null}}, caption, fullname, disabled, sid |
      ConvertTo-Html -Fragment `
@@ -215,6 +226,18 @@ $localusers = Get-WmiObject win32_UserAccount |
      -postcontent "</div>" | 
      Out-String
 
+### $localgroups = Get-WMIObject win32_group -filter "LocalAccount='True'" |
+###   Select PSComputername,Name,@{Name="Members";Expression={
+###    $_.GetRelated("win32_useraccount").Name -join ";"
+###   }}
+
+echo "Obteniendo relaciones de grupos con cuentas de usuario local..."
+$localgroups = Get-WMIObject win32_group -filter "LocalAccount='True'" | ForEach-Object -Process {write-host "`n$($_.Name): "-nonewline; $_.GetRelated("Win32_Account","Win32_GroupUser","","","PartComponent","GroupComponent",$FALSE,$NULL) | select -ExpandProperty Name | ForEach-Object -Process {write-host "$($_), " -nonewline}} | ConvertTo-Html -Fragment `
+     -precontent "<div id='localgroups'><h3>Relación cuentas locales con grupos locales</h3><pre>"`
+     -postcontent "</pre></div>" | 
+     Out-String
+
+echo "Obteniendo datos de antivirus..."
 $antivirus = Get-WmiObject -Namespace "root\securityCenter2" -Query "Select * From AntiVirusProduct" |
      Select-Object displayName, pathToSignedProductExe, timestamp |
      ConvertTo-Html -Fragment `
@@ -222,12 +245,14 @@ $antivirus = Get-WmiObject -Namespace "root\securityCenter2" -Query "Select * Fr
      -postcontent "</div>" | 
      Out-String     
 
+echo "Obteniendo datos de discos y particiones..."
 $logicaldisk = Get-WMIObject Win32_logicaldisk |
      ConvertTo-Html -Fragment DeviceID, DriveType, ProviderName, Size, FreeSpace, VolumeName `
      -precontent "<div id='drives'><h3>Unidades locales y unidades de red</h3>"`
      -postcontent "</div>" | 
      Out-String
  
+echo "Obteniendo datos de impresoras..."
 $impresoras = Get-WMIObject Win32_printer |
      ConvertTo-Html -Fragment name, sharename, status `
      -precontent "<div id='printers'><h3>Impresoras</h3>"`
@@ -240,18 +265,16 @@ $impresorasred = Get-WMIObject Win32_TCPIPPrinterPort |
      -postcontent "</div>" | 
      Out-String
 
+echo "Obteniendo datos de recursos compartidos..."
 $share = Get-WMIObject Win32_share |
      ConvertTo-Html -Fragment  name, path, status, caption, description  `
      -precontent "<div id='share'><h3>Recursos compartidos</h3>"`
      -postcontent "</div>" | 
      Out-String
-
-# listado de credenciales del usuario
-$cmdcredtitle = "Listado de credenciales del usuario: ${env:USERNAME}"
-$cmdcredtxt = cmdkey /list | out-string
-$cmdcredhtml = "<div id='cmdcredtitle'><h3>$cmdcredtitle</h3><pre>${cmdcredtxt}</pre></div>" 
+  
 
 # tareas programadas
+echo "Obteniendo datos de tareas programadas..."
 $tareastitle = "Listado de tareas programadas (taskpath '\')"
 try {
 # en w10 o 2016 usar get-scheduledtask
@@ -284,12 +307,14 @@ $lineas
 "@
 }
   
+echo "Obteniendo datos de certificados..."
 $certificados =  Get-ChildItem cert:\currentuser\my |
      ConvertTo-Html -Fragment  issuer, subject, hasprivatekey, notbefore, notafter `
      -precontent "<div id='certificados'><h3>Certificados del usuario</h3>"`
      -postcontent "</div>" | 
      Out-String
 
+echo "Obteniendo datos de licencias..."
 # licencias
 $tmplicfile = "c:/temp/produkey.html"
 &(which produkey.exe) /shtml $tmplicfile
@@ -429,9 +454,9 @@ $notas = @"
     $operatingsystem, 
     $nic, 
     $localusers, 
+    $localgroups, 
     $logicaldisk, 
     $share, 
-    $cmdcredhtml,
     $impresoras,
     $impresorasred,
     $licencias,
@@ -443,6 +468,7 @@ $notas = @"
     $varios1,
     $varios2,
     $notas,
+    $aplicaciones,
     $footer > $OUTFILE
 
 # uninstall installed third party apps
