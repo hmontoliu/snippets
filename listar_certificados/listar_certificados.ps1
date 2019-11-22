@@ -15,12 +15,9 @@
 $computername = $ENV:COMPUTERNAME
 $username = "${ENV:USERNAME}@${ENV:USERDOMAIN}"
 $outdir = "c:\temp\" 
-$localdir = "c:\temp\"
 
 New-Item -ItemType Directory -Force -Path "$outdir"
 
 $OUTFILE = "${outdir}\${computername}-${username}-cert.csv"
 
 Get-ChildItem cert:\currentuser\my  | Select-Object -Property DNSNameList, notbefore, notafter, hasprivatekey, Issuer, Subject | Export-CSV -Path $OUTFILE -Delimiter ';' -NoTypeInformation
-
-echo "Exiting..."
